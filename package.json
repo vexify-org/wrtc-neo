@@ -1,40 +1,40 @@
 {
-    "name": "wrtc-neo",
-    "version": "8.0.0",
-    "description": "A general-purpose WebRTC implementation for Node.js with ICE/STUN/TURN, DTLS, UDP hole punching and virtual LAN",
-    "main": "index.js",
-    "files": [
-        "index.js",
-        "lib/",
-        "tun/",
-        "README.md",
-        "LICENSE"
-    ],
-    "scripts": {
-        "test": "node test/basic.test.js && node test/stun-vector.test.js"
-    },
-    "keywords": [
-        "webrtc",
-        "p2p",
-        "rtcpeerconnection",
-        "datachannel",
-        "ice",
-        "stun",
-        "turn",
-        "hole-punching",
-        "nat-traversal",
-        "virtual-lan",
-        "udp"
-    ],
-    "author": "Vexify",
-    "license": "Apache-2.0",
-    "dependencies": {
-        "ws": "^8.14.2"
-    },
-    "optionalDependencies": {
-        "ffiko": "^1.0.0"
-    },
-    "engines": {
-        "node": ">=16.0.0"
-    }
+  "name": "wrtc-neo",
+  "version": "8.0.0",
+  "description": "A general-purpose WebRTC implementation for Node.js with ICE/STUN/TURN, DTLS, UDP hole punching and virtual LAN",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib/",
+    "tun/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/basic.test.js && node test/stun-vector.test.js && node test/ice.test.js && node test/reliable-channel.test.js && node test/hole-puncher.test.js && node test/nat.test.js && node test/signaling.test.js && node test/connection-pool.test.js"
+  },
+  "keywords": [
+    "webrtc",
+    "p2p",
+    "rtcpeerconnection",
+    "datachannel",
+    "ice",
+    "stun",
+    "turn",
+    "hole-punching",
+    "nat-traversal",
+    "virtual-lan",
+    "udp"
+  ],
+  "author": "Vexify",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "ws": "^8.14.2"
+  },
+  "optionalDependencies": {
+    "ffiko": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }
