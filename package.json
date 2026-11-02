@@ -1,6 +1,6 @@
 {
   "name": "wrtc-neo",
-  "version": "8.0.0",
+  "version": "8.0.2",
   "description": "A general-purpose WebRTC implementation for Node.js with ICE/STUN/TURN, DTLS, UDP hole punching and virtual LAN",
   "main": "index.js",
   "files": [
@@ -26,6 +26,10 @@
     "virtual-lan",
     "udp"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vexify-org/wrtc-neo.git"
+  },
   "author": "Vexify",
   "license": "Apache-2.0",
   "dependencies": {
