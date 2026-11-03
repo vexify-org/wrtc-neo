@@ -176,6 +176,41 @@ test('punch() after stop() does not throw async', async () => {
     if (uncaught) throw new Error(`uncaught from stale punch timer: ${uncaught.message}`);
 });
 
+// 回归：配置 authToken 时，认证后的普通 JSON 数据（ping）仍须走 type 分发
+// （此前重构曾把通用 type 分发删掉，导致数据包只落 raw 分支，'ping' 永不触发）
+test('auth mode: signed punch then ping data reaches handler; wrong token rejected', async () => {
+    const a = new wrtc.HolePuncher({ authToken: 'shared-secret' });
+    const b = new wrtc.HolePuncher({ authToken: 'shared-secret' });
+    await a.start(0);
+    await b.start(0);
+
+    const gotPunch = new Promise(res => b.on('punch', d => res(d)));
+    a.punch('127.0.0.1', b.localPort, 'peer-a');
+    const punch = await gotPunch;
+    if (typeof punch.sig !== 'string') throw new Error('punch missing signature');
+
+    await sleep(400);
+    if (!a.peers.has('peer-a')) throw new Error('A did not learn peer from signed ack');
+
+    const gotData = new Promise(res => a.on('ping', d => res(d)));
+    b.send('peer-a', JSON.stringify({ type: 'ping', v: 42 }));
+    const data = await Promise.race([gotData, sleep(2000).then(() => null)]);
+    if (!data || data.v !== 42) throw new Error('ping data not dispatched in auth mode');
+    a.stop(); b.stop();
+
+    // 错误密钥的 punch 必须被拒绝
+    const evil = new wrtc.HolePuncher({ authToken: 'wrong-secret' });
+    const victim = new wrtc.HolePuncher({ authToken: 'shared-secret' });
+    await evil.start(0);
+    await victim.start(0);
+    let leaked = false;
+    victim.on('punch', () => { leaked = true; });
+    evil.punch('127.0.0.1', victim.localPort, 'evil');
+    await sleep(400);
+    if (leaked || victim.peers.has('evil')) throw new Error('unauthenticated punch was accepted');
+    evil.stop(); victim.stop();
+});
+
 test('send()/sendTo() throw clear error after stop', async () => {
     const hp = new wrtc.HolePuncher();
     await hp.start(0);
